@@ -6,11 +6,11 @@ class Forgejo < Formula
   license "GPL-3.0-or-later"
   head "https://codeberg.org/forgejo/forgejo.git", branch: "forgejo"
 
-  conflicts_with "gitea", because: "both install `gitea` binaries"
-
   depends_on "go" => :build
   depends_on "node" => :build
   depends_on "yarn" => :build
+
+  conflicts_with "gitea", because: "both install `gitea` binaries"
 
   uses_from_macos "sqlite"
 

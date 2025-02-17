@@ -10,9 +10,9 @@ class Forgejo < Formula
   depends_on "node" => :build
   depends_on "yarn" => :build
 
-  conflicts_with "gitea", because: "both install `gitea` binaries"
-
   uses_from_macos "sqlite"
+
+  conflicts_with "gitea", because: "both install `gitea` binaries"
 
   def install
     ENV["CGO_ENABLED"] = "1"

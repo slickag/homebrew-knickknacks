@@ -18,6 +18,9 @@ class Forgejo < Formula
     ENV["CGO_ENABLED"] = "1"
     ENV["TAGS"] = "bindata timetzdata sqlite sqlite_unlock_notify"
     system "make", "build"
+    system "go", "build", "contrib/environment-to-ini/environment-to-ini.go"
+    bin.install "gitea"
+    bin.install "environment-to-ini"
   end
 
   service do

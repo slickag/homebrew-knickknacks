@@ -27,7 +27,7 @@ cask "parsec-startup" do
             pkgutil: "tv.parsec.www"
 
   zap trash: [
-    "/Library/LaunchAgents/com.parsec.app.plist"
+    "/Library/LaunchAgents/com.parsec.app.plist",
     "~/.parsec",
     "~/Library/Caches/tv.parsec.www",
     "~/Library/HTTPStorages/tv.parsec.www",

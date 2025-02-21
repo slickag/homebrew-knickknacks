@@ -21,10 +21,11 @@ class Forgejo < Formula
     system "go", "build", "contrib/environment-to-ini/environment-to-ini.go"
     bin.install "gitea"
     bin.install "environment-to-ini"
+    bin.install_symlink "gitea" => "forgejo"
   end
 
   service do
-    run [opt_bin/"gitea", "web", "--work-path", var/"forgejo"]
+    run [opt_bin/"forgejo", "web", "--work-path", var/"forgejo"]
     keep_alive true
     log_path "/tmp/forgejo.out.log"
     error_log_path "/tmp/forgejo.err.log"
@@ -35,7 +36,7 @@ class Forgejo < Formula
     port = free_port
 
     pid = fork do
-      exec bin/"gitea", "web", "--port", port.to_s, "--install-port", port.to_s
+      exec bin/"forgejo", "web", "--port", port.to_s, "--install-port", port.to_s
     end
     sleep 5
     sleep 10 if OS.mac? && Hardware::CPU.intel?
@@ -46,7 +47,7 @@ class Forgejo < Formula
     output = shell_output("curl -s http://localhost:#{port}/")
     assert_match "Installation - Forgejo: Beyond coding. We Forge.", output
 
-    assert_match version.to_s, shell_output("#{bin}/gitea -v")
+    assert_match version.to_s, shell_output("#{bin}/forgejo -v")
   ensure
     Process.kill("TERM", pid)
     Process.wait(pid)

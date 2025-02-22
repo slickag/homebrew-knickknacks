@@ -1,8 +1,8 @@
 class Z4hTmux < Formula
   desc "Terminal multiplexer"
   homepage "https://tmux.github.io/"
-  url "https://github.com/tmux/tmux/releases/download/3.5a/tmux-3.5a.tar.gz"
-  sha256 "16216bd0877170dfcc64157085ba9013610b12b082548c7c9542cc0103198951"
+  url "http://10.0.0.5/AG/-/packages/generic/tmux/3.5a/files/1"
+  sha256 "c362793d319269793a1bd862a65674002db6baef523a5376c2d00517de824555"
   license "ISC"
 
   livecheck do

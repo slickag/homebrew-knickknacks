@@ -30,7 +30,6 @@ class Z4hNcurses < Formula
       "--without-tack",
       "--without-tests",
       "--without-pc-suffix",
-      "--without-pkg-config-libdir",
       "--without-debug",
       "--without-dlsym",
       "--without-pcre2",

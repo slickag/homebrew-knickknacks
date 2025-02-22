@@ -48,6 +48,7 @@ class Z4hNcurses < Formula
     ]
     args << "--with-terminfo-dirs=#{share}/terminfo:/etc/terminfo:/lib/terminfo:/usr/share/terminfo" if OS.linux?
 
+    ENV.prepend_path "PATH", "/tmp/fake-bin"
     system "./configure", *args
     system "make", "install"
 

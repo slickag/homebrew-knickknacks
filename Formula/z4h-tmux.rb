@@ -43,6 +43,8 @@ class Z4hTmux < Formula
     args << "--with-TERM=screen-256color" if OS.mac? && MacOS.version < :sonoma
     args << "--enable-utf8proc" if OS.linux? || MacOS.version >= :high_sierra
 
+    ENV.append_to_cflags "-Wall -Wmissing-prototypes -DNDEBUG -flto -fno-strict-aliasing"
+    ENV.append "DLLDFLAGS", "-shared"
     ENV.append "LDFLAGS", "-lresolv"
     system "./configure", *args, *std_configure_args
 

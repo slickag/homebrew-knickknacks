@@ -17,8 +17,14 @@ class Z4hNcurses < Formula
   end
 
   def install
+    # Workaround for
+    # macOS: mkdir: /usr/lib/pkgconfig:/opt/homebrew/Library/Homebrew/os/mac/pkgconfig/12: Operation not permitted
+    # Linux: configure: error: expected a pathname, not ""
+    (lib/"pkgconfig").mkpath
+
     args = [
       "--prefix=#{prefix}",
+      "--with-pkg-config-libdir=#{lib}/pkgconfig",
       "--disable-pc-files",
       "--disable-mixed-case",
       "--disable-rpath",
@@ -37,7 +43,7 @@ class Z4hNcurses < Formula
       "--enable-widec",
       "--without-shared",
       "--without-cxx-shared",
-      "--without-gpm",
+      "--with-gpm=no",
       "--without-ada",
     ]
     args << "--with-terminfo-dirs=#{share}/terminfo:/etc/terminfo:/lib/terminfo:/usr/share/terminfo" if OS.linux?

@@ -1,8 +1,8 @@
 class Z4hTmux < Formula
   desc "Terminal multiplexer"
   homepage "https://tmux.github.io/"
-  url "http://10.0.0.5/AG/-/packages/generic/tmux/3.5a/files/1"
-  sha256 "c362793d319269793a1bd862a65674002db6baef523a5376c2d00517de824555"
+  url "http://10.0.0.5/AG/tmux/archive/tmux-3.5a.tar.gz"
+  sha256 "54f186984a26dea1625a8e86255dfde5ae861ac6ce0f8e887ed0208d0ed95204"
   license "ISC"
 
   livecheck do
@@ -29,7 +29,7 @@ class Z4hTmux < Formula
   end
 
   def install
-    system "sh", "autogen.sh" if build.head?
+    system "sh", "autogen.sh"
 
     args = %W[
       --enable-sixel
@@ -48,7 +48,6 @@ class Z4hTmux < Formula
 
     system "make", "install"
 
-    # pkgshare.install "example_tmux.conf"
   end
 
   test do

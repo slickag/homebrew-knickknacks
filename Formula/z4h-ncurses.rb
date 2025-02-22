@@ -38,7 +38,7 @@ class Z4hNcurses < Formula
       "--enable-widec",
       "--without-shared",
       "--without-cxx-shared",
-      "--with-gpm=no",
+      "--without-gpm",
       "--without-ada",
     ]
     args << "--with-terminfo-dirs=#{share}/terminfo:/etc/terminfo:/lib/terminfo:/usr/share/terminfo" if OS.linux?

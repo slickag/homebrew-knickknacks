@@ -49,7 +49,6 @@ class Z4hTmux < Formula
     system "./configure", *args, *std_configure_args
 
     system "make", "install"
-
   end
 
   test do

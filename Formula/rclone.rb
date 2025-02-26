@@ -13,9 +13,7 @@ class Rclone < Formula
     ENV["GOBIN"] = "#{bin}"
     ENV["GOMODCACHE"] = "#{HOMEBREW_CACHE}/go_mod_cache/pkg/mod"
     ENV["CGO_FLAGS"] = "-g -O3"
-    args = ["GOTAGS=brew"] if OS.mac?
-    # system "go", "build", *args
-    system "go", "env"
+    args = ["GOTAGS=cmount"]
     system "make", *args
     man1.install "rclone.1"
     system bin/"rclone", "genautocomplete", "bash", "rclone.bash"
@@ -24,12 +22,6 @@ class Rclone < Formula
     bash_completion.install "rclone.bash" => "rclone"
     zsh_completion.install "_rclone"
     fish_completion.install "rclone.fish"
-  end
-
-  def caveats
-    <<~EOS
-      Homebrew's installation does not include the `mount` subcommand on macOS which depends on FUSE, use `nfsmount` instead.
-    EOS
   end
 
   test do

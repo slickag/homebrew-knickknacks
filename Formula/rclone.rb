@@ -7,6 +7,7 @@ class Rclone < Formula
   head "https://github.com/rclone/rclone.git", branch: "master"
 
   depends_on "go" => :build
+  depends_on "fuse-t" => :build
 
   def install
     ENV["GOPATH"] = prefix.to_s

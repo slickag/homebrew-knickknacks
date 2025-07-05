@@ -1,16 +1,16 @@
 class Rclone < Formula
   desc "Rsync for cloud storage"
   homepage "https://rclone.org/"
-  url "https://github.com/rclone/rclone/archive/refs/tags/v1.69.1.tar.gz"
-  sha256 "2fe258d1b4257aef98b53794c27d1b254ee0f2e307634f94fbf3c71786e3b1b5"
+  url "https://github.com/rclone/rclone/archive/refs/tags/v1.70.2.tar.gz"
+  sha256 "dc6b1eabbe35cfde3b9db2a25567ed6d4f4e65b5c71e52da7d6ff5f987ba86dc"
   license "MIT"
   head "https://github.com/rclone/rclone.git", branch: "master"
 
   depends_on "go" => :build
 
   def install
-    ENV["GOPATH"] = "#{prefix}"
-    ENV["GOBIN"] = "#{bin}"
+    ENV["GOPATH"] = prefix.to_s
+    ENV["GOBIN"] = bin.to_s
     ENV["GOMODCACHE"] = "#{HOMEBREW_CACHE}/go_mod_cache/pkg/mod"
     ENV["CGO_FLAGS"] = "-g -O3"
     args = ["GOTAGS=cmount"]

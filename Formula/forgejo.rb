@@ -1,8 +1,8 @@
 class Forgejo < Formula
   desc "Painless self-hosted all-in-one software development service"
   homepage "https://forgejo.org/"
-  url "https://codeberg.org/forgejo/forgejo/releases/download/v11.0.3/forgejo-src-11.0.3.tar.gz"
-  sha256 "13dc8d6c2a829899c9b4f89451438e70962a9366ff41ce6db10c7bc4a4cce520"
+  url "https://codeberg.org/forgejo/forgejo/releases/download/v12.0.0/forgejo-src-12.0.0.tar.gz"
+  sha256 "d93d873babc2390a1cd327f67cccd736b5e977cb0d6b2baba66e5d919ecae03c"
   license "GPL-3.0-or-later"
   head "https://codeberg.org/forgejo/forgejo.git", branch: "forgejo"
 

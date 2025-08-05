@@ -1,14 +1,13 @@
 class Forgejo < Formula
   desc "Painless self-hosted all-in-one software development service"
   homepage "https://forgejo.org/"
-  url "https://codeberg.org/forgejo/forgejo/releases/download/v12.0.0/forgejo-src-12.0.0.tar.gz"
-  sha256 "d93d873babc2390a1cd327f67cccd736b5e977cb0d6b2baba66e5d919ecae03c"
+  url "https://codeberg.org/forgejo/forgejo/releases/download/v12.0.1/forgejo-src-12.0.1.tar.gz"
+  sha256 "792f0435e9e4620da96a92305ed752f54b47ebc23d5f8e08a70299bac2245dd9"
   license "GPL-3.0-or-later"
   head "https://codeberg.org/forgejo/forgejo.git", branch: "forgejo"
 
   depends_on "go" => :build
   depends_on "node" => :build
-  depends_on "yarn" => :build
 
   uses_from_macos "sqlite"
 

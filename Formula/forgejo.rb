@@ -1,5 +1,5 @@
 class Forgejo < Formula
-  desc "Painless self-hosted all-in-one software development service"
+  desc "Self-hosted lightweight software forge"
   homepage "https://forgejo.org/"
   url "https://codeberg.org/forgejo/forgejo/releases/download/v12.0.1/forgejo-src-12.0.1.tar.gz"
   sha256 "792f0435e9e4620da96a92305ed752f54b47ebc23d5f8e08a70299bac2245dd9"
@@ -11,23 +11,20 @@ class Forgejo < Formula
 
   uses_from_macos "sqlite"
 
-  conflicts_with "gitea", because: "both install `gitea` binaries"
-
   def install
     ENV["CGO_ENABLED"] = "1"
     ENV["TAGS"] = "bindata timetzdata sqlite sqlite_unlock_notify"
     system "make", "build"
     system "go", "build", "contrib/environment-to-ini/environment-to-ini.go"
-    bin.install "gitea"
+    bin.install "gitea" => "forgejo"
     bin.install "environment-to-ini"
-    bin.install_symlink "gitea" => "forgejo"
   end
 
   service do
     run [opt_bin/"forgejo", "web", "--work-path", var/"forgejo"]
     keep_alive true
-    log_path "/tmp/forgejo.out.log"
-    error_log_path "/tmp/forgejo.err.log"
+    log_path var/"log/forgejo.log"
+    error_log_path var/"log/forgejo.log"
   end
 
   test do

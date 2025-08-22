@@ -36,9 +36,9 @@ class Curl < Formula
   keg_only :provided_by_macos
 
   depends_on "cmake" => :build
+  depends_on "pkgconf" => [:build, :test]
   depends_on "rust" => :build
 
-  depends_on "pkgconf" => [:build, :test]
   depends_on "brotli"
   depends_on "libnghttp2"
   depends_on "libssh2"

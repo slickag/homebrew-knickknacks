@@ -4,7 +4,7 @@ cask "ccache-gui" do
 
   url "https://github.com/macmade/ccache-gui/releases/download/#{version}/ccache.app.zip"
   name "CCache GUI"
-  desc "macOS GUI helper for ccache"
+  desc "GUI helper for ccache"
   homepage "https://github.com/macmade/ccache-gui"
 
   auto_updates true

@@ -16,6 +16,7 @@ cask "parsec-startup" do
     end
   end
 
+  auto_updates true
   conflicts_with cask: "parsec"
 
   pkg "parsec-macos-startup.pkg"

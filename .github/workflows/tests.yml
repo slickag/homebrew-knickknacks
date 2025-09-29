@@ -10,7 +10,7 @@ jobs:
   test-bot:
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-13, macos-15]
+        os: [macos-13, macos-15]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Homebrew
@@ -30,7 +30,7 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
 
-      - run: brew test-bot --only-formulae --root-url='https://ghcr.io/v2/slickag/forgejo'
+      - run: brew test-bot --only-formulae --root-url='https://ghcr.io/v2/slickag/knickknacks'
         if: github.event_name == 'pull_request'
 
       - name: Upload bottles as artifact

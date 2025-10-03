@@ -1,4 +1,4 @@
-cask "MediaDownloader" do
+cask "mediadownloader" do
   version "5.4.3"
   sha256 "2934113466c46c8681de6f177ef758a79230c7a0371caf50e983a8e056d6489f"
 

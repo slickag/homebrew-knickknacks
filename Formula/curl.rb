@@ -24,6 +24,12 @@ class Curl < Formula
     regex(/href=.*?curl[._-]v?(.*?)\.t/i)
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/slickag/knickknacks"
+    rebuild 2
+    sha256 cellar: :any, arm64_tahoe: "782603840de95e9b741b9ebb5f6c8cad1ca51e64eaa5a91b3d5c1c3e58dcc2b7"
+  end
+
   head do
     url "https://github.com/curl/curl.git", branch: "master"
 
@@ -73,31 +79,41 @@ class Curl < Formula
     # Build with quiche:
     #  https://github.com/curl/curl/blob/master/docs/HTTP3.md#quiche-version
     quiche = buildpath/"quiche/quiche"
+    boring = buildpath/"quiche/quiche/deps/boringssl"
     quiche_pc_path = buildpath/"quiche/target/release/quiche.pc"
     resource("quiche").stage quiche.parent
     cd "quiche" do
-      # Build static libs only
-      inreplace "./Cargo.toml", /^debug = true/, "debug = false"
-      inreplace "quiche/Cargo.toml", /^crate-type = .*/, "crate-type = [\"staticlib\"]"
+      ENV["CARGO_C_LIBDIR"] = lib.to_s
+      ln_sf boring/"src", buildpath/"boringssl"
 
-      system "curl", "-o", buildpath/"quiche/quiche.sh", "https://www.surge.box.ca/files/quiche.sh"
-      chmod "+x", buildpath/"quiche/quiche.sh"
-      system buildpath/"quiche/quiche.sh"
-      (quiche/"deps/boringssl/src/lib").install Pathname.glob("target/release/build/*/out/build/lib{crypto,ssl}.a")
-      rm buildpath/"quiche/quiche.sh"
+      # Build static libs only
+      inreplace quiche/"Cargo.toml", /^crate-type = .*/, "crate-type = [\"staticlib\"]"
+      inreplace quiche/"Cargo.toml", /^cmake = "0.1"/, "cmake = \"0.1.45\""
+      inreplace "./Cargo.toml", /^debug = true/, "debug = false"
+
+      system "cargo", "build", "--lib", "--package", "quiche", "--features", "ffi,pkg-config-meta,qlog", "--release"
+      (buildpath/"boringssl/lib").install Pathname.glob("target/release/build/*/out/build/lib{crypto,ssl}.a")
+      lib.install quiche.parent/"target/release/libquiche.a"
+      include.install quiche/"include/quiche.h"
+      inreplace quiche_pc_path do |s|
+        s.gsub!(/includedir=.+/, "includedir=#{include}")
+        s.gsub!(/libdir=.+/, "libdir=#{lib}")
+      end
+      (lib/"pkgconfig").install quiche_pc_path
     end
 
+    ENV.append "LDFLAGS", "-Wl,-rpath,#{lib}/pkgconfig"
+
     if build.head?
-      ENV["CFLAGS"] = "-march=native -O3 -pipe -flto=auto"
-      ENV["CXXFLAGS"] = "-march=native -O3 -pipe -flto=auto"
-      ENV["LDFLAGS"] = "-Wl,-O1 -Wl, -flto=auto"
+      ENV.append_to_cflags "-march=native -O3 -pipe -flto=auto"
 
       system "autoreconf", "--force", "--install", "--verbose"
     end
 
     args = %W[
       --disable-silent-rules
-      --with-ssl=#{quiche}/deps/boringssl/src
+      --disable-ipv6
+      --with-ssl=#{buildpath}/boringssl
       --without-ca-bundle
       --without-ca-path
       --with-ca-fallback
@@ -108,7 +124,7 @@ class Curl < Formula
       --without-libpsl
       --with-zsh-functions-dir=#{zsh_completion}
       --with-fish-functions-dir=#{fish_completion}
-      --with-quiche=#{quiche.parent}/target/release
+      --with-quiche=#{lib}/pkgconfig
       --enable-alt-svc
       --enable-ech
     ]
@@ -125,17 +141,10 @@ class Curl < Formula
       ]
     end
 
-    system "./configure", *args, *std_configure_args
+    system "./configure", "LDFLAGS=#{ENV.ldflags}", *args, *std_configure_args
     system "make", "install"
     system "make", "install", "-C", "scripts"
     libexec.install "scripts/mk-ca-bundle.pl"
-    lib.install quiche.parent/"target/release/libquiche.a"
-    include.install quiche/"include/quiche.h"
-    inreplace quiche_pc_path do |s|
-      s.gsub!(/includedir=.+/, "includedir=#{include}")
-      s.gsub!(/libdir=.+/, "libdir=#{lib}")
-    end
-    (lib/"pkgconfig").install quiche_pc_path
   end
 
   test do

@@ -6,8 +6,18 @@ class Rclone < Formula
   license "MIT"
   head "https://github.com/rclone/rclone.git", branch: "master"
 
+  bottle do
+    root_url "https://ghcr.io/v2/slickag/knickknacks"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:  "2004b27614bed3bc4abc68596f52010cc53ef250adb93915d38d11a5eb1751e3"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "bd23b3d9d62acd79b16cf56fe19299a2c90fecbee24fee998b49659e6eec63df"
+  end
+
   depends_on "go" => :build
-  depends_on :macos
+
+  on_linux do
+    depends_on "libfuse@2"
+  end
 
   def install
     ENV["GOPATH"] = prefix.to_s

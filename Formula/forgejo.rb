@@ -1,10 +1,16 @@
 class Forgejo < Formula
   desc "Self-hosted lightweight software forge"
   homepage "https://forgejo.org/"
-  url "https://codeberg.org/forgejo/forgejo/releases/download/v12.0.4/forgejo-src-12.0.4.tar.gz"
-  sha256 "b1adeec3f5f446c63996250a334be62baf0cd8fbb9ad71a3316a5896cb327d08"
+  url "https://codeberg.org/forgejo/forgejo/releases/download/v13.0.1/forgejo-src-13.0.1.tar.gz"
+  sha256 "98cb495cd07881d90aa32cf143facef4abba2b732684ab1d938af9fa3ab12f26"
   license "GPL-3.0-or-later"
   head "https://codeberg.org/forgejo/forgejo.git", branch: "forgejo"
+
+  bottle do
+    root_url "https://ghcr.io/v2/slickag/knickknacks"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:  "53e40ce432fb53740005b6da63021e929ecd99f070398808fa75a90d0d857389"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "f81e0dc5d59d50778b150e58639c0485e8bb958f5a15e4ad856ea6fe6a325d7a"
+  end
 
   depends_on "go" => :build
   depends_on "node" => :build

@@ -5,6 +5,10 @@ on:
     types:
       - labeled
 
+env:
+  HOMEBREW_DEVELOPER: 1
+  HOMEBREW_NO_ANALYTICS: 1
+
 jobs:
   pr-pull:
     if: contains(github.event.pull_request.labels.*.name, 'pr-pull')

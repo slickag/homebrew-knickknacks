@@ -1,24 +1,23 @@
-#
-# Homebrew Formula for curl + quiche
-# Based on https://github.com/Homebrew/homebrew-core/blob/master/Formula/c/curl.rb
-#
-# brew install -s <url of curl.rb>
-#
-# You can add --HEAD if you want to build curl from git master.
-#
-# If you don't want to be auto-upgraded by `brew upgrade`, run
-# `brew pin curl`.
-#
 class Curl < Formula
   desc "Get a file from an HTTP, HTTPS or FTP server with HTTP/3 support using quiche"
   homepage "https://curl.se"
-  # Don't forget to update both instances of the version in the GitHub mirror URL.
-  url "https://curl.se/download/curl-8.16.0.tar.bz2"
-  mirror "https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.bz2"
-  mirror "http://fresh-center.net/linux/www/curl-8.16.0.tar.bz2"
-  mirror "http://fresh-center.net/linux/www/legacy/curl-8.16.0.tar.bz2"
-  sha256 "9459180ab4933b30d0778ddd71c91fe2911fab731c46e59b3f4c8385b1596c91"
   license "curl"
+
+  stable do
+    url "https://curl.se/download/curl-8.16.0.tar.bz2"
+    mirror "https://github.com/curl/curl/releases/download/curl-8_16_0/curl-8.16.0.tar.bz2"
+    mirror "http://fresh-center.net/linux/www/curl-8.16.0.tar.bz2"
+    mirror "http://fresh-center.net/linux/www/legacy/curl-8.16.0.tar.bz2"
+    sha256 "9459180ab4933b30d0778ddd71c91fe2911fab731c46e59b3f4c8385b1596c91"
+
+    resource "quiche" do
+      url "https://github.com/cloudflare/quiche.git",
+      tag:      "0.24.6",
+      revision: "020a43a0a5eed76f57dd3ce5012149aa576c594d"
+      mirror "http://www.surge.box.ca/files/quiche-0.24.6.tar.bz2"
+      sha256 "a5161fb0488a23ec2e31f85662ea8fb81875bea2358a3c26e2442e1605b72635"
+    end
+  end
 
   livecheck do
     url "https://curl.se/download/"
@@ -31,17 +30,21 @@ class Curl < Formula
     depends_on "autoconf" => :build
     depends_on "automake" => :build
     depends_on "libtool" => :build
+
+    resource "quiche" do
+      url "https://github.com/cloudflare/quiche.git", branch: "master"
+    end
   end
 
   keg_only :provided_by_macos
 
   depends_on "cmake" => :build
   depends_on "pkgconf" => [:build, :test]
-  depends_on "rust" => :build
 
   depends_on "brotli"
   depends_on "libnghttp2"
   depends_on "libssh2"
+  depends_on :macos
   depends_on "rtmpdump"
   depends_on "zstd"
 
@@ -49,12 +52,12 @@ class Curl < Formula
   uses_from_macos "openldap"
   uses_from_macos "zlib", since: :sierra
 
-  on_system :linux, macos: :monterey_or_older do
-    depends_on "libidn2"
+  on_macos do
+    depends_on "rust" => :build
   end
 
-  resource "quiche" do
-    url "https://github.com/cloudflare/quiche.git", branch: "master"
+  on_monterey :or_older do
+    depends_on "libidn2"
   end
 
   def install
@@ -70,19 +73,27 @@ class Curl < Formula
     # Build with quiche:
     #  https://github.com/curl/curl/blob/master/docs/HTTP3.md#quiche-version
     quiche = buildpath/"quiche/quiche"
+    quiche_pc_path = buildpath/"quiche/target/release/quiche.pc"
     resource("quiche").stage quiche.parent
     cd "quiche" do
       # Build static libs only
+      inreplace "./Cargo.toml", /^debug = true/, "debug = false"
       inreplace "quiche/Cargo.toml", /^crate-type = .*/, "crate-type = [\"staticlib\"]"
 
-      system "cargo", "build",
-                      "--release",
-                      "--package=quiche",
-                      "--features=ffi,pkg-config-meta,qlog"
+      system "curl", "-o", buildpath/"quiche/quiche.sh", "https://www.surge.box.ca/files/quiche.sh"
+      chmod "+x", buildpath/"quiche/quiche.sh"
+      system buildpath/"quiche/quiche.sh"
       (quiche/"deps/boringssl/src/lib").install Pathname.glob("target/release/build/*/out/build/lib{crypto,ssl}.a")
+      rm buildpath/"quiche/quiche.sh"
     end
 
-    system "autoreconf", "--force", "--install", "--verbose" if build.head?
+    if build.head?
+      ENV["CFLAGS"] = "-march=native -O3 -pipe -flto=auto"
+      ENV["CXXFLAGS"] = "-march=native -O3 -pipe -flto=auto"
+      ENV["LDFLAGS"] = "-Wl,-O1 -Wl, -flto=auto"
+
+      system "autoreconf", "--force", "--install", "--verbose"
+    end
 
     args = %W[
       --disable-silent-rules
@@ -91,6 +102,7 @@ class Curl < Formula
       --without-ca-path
       --with-ca-fallback
       --with-default-ssl-backend=openssl
+      --with-gssapi
       --with-librtmp
       --with-libssh2
       --without-libpsl
@@ -101,13 +113,7 @@ class Curl < Formula
       --enable-ech
     ]
 
-    args << if OS.mac?
-      "--with-gssapi"
-    else
-      "--with-gssapi=#{Formula["krb5"].opt_prefix}"
-    end
-
-    args += if OS.mac? && MacOS.version >= :ventura
+    args += if MacOS.version >= :ventura
       %w[
         --with-apple-idn
         --without-libidn2
@@ -123,6 +129,13 @@ class Curl < Formula
     system "make", "install"
     system "make", "install", "-C", "scripts"
     libexec.install "scripts/mk-ca-bundle.pl"
+    lib.install quiche.parent/"target/release/libquiche.a"
+    include.install quiche/"include/quiche.h"
+    inreplace quiche_pc_path do |s|
+      s.gsub!(/includedir=.+/, "includedir=#{include}")
+      s.gsub!(/libdir=.+/, "libdir=#{lib}")
+    end
+    (lib/"pkgconfig").install quiche_pc_path
   end
 
   test do

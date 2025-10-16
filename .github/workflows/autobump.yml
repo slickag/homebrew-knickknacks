@@ -1,7 +1,7 @@
 name: Homebrew bump formula
 on:
   schedule:
-  - cron: "20 2-23/1 * * *"
+  - cron: '30 * * * *'
 
 jobs:
   autobump:

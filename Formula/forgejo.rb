@@ -8,8 +8,8 @@ class Forgejo < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/slickag/knickknacks"
-    sha256 cellar: :any_skip_relocation, arm64_tahoe:  "debec110d14f4457be0b43f5c222b912c9b4f494d8c882ed2fb362ba61c72c55"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "949caaa1e7837a1bfbf7da98ece4e9ae9a00db9db526f36f894e46fc90a8c71e"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:  "53e40ce432fb53740005b6da63021e929ecd99f070398808fa75a90d0d857389"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "f81e0dc5d59d50778b150e58639c0485e8bb958f5a15e4ad856ea6fe6a325d7a"
   end
 
   depends_on "go" => :build

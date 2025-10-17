@@ -26,4 +26,4 @@ jobs:
         #   CASKS-3
         #   ...
         # Do not use a fork for opening PR's
-        fork: false
+        fork: true # false

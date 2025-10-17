@@ -7,6 +7,11 @@ cask "mediadownloader" do
   desc "Qt/C++ front end to yt-dlp, youtube-dl, gallery-dl, and more"
   homepage "https://github.com/mhogomchungu/media-downloader"
 
+  livecheck do
+    url :url
+    strategy :github_latest
+  end
+
   auto_updates true
   depends_on macos: ">= :high_sierra"
 

@@ -9,12 +9,21 @@ jobs:
     runs-on: macos-26
     steps:
     - name: Set up Homebrew
+      id: set-up-homebrew
       uses: Homebrew/actions/setup-homebrew@main
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        core: false
+        cask: false
 
     - name: Set up git
       uses: Homebrew/actions/git-user-config@main
+
+    - name: Get list of autobump items
+      id: autobump
+      run: |
+        echo "formulae_list=$(brew tap-info --json "${GITHUB_REPOSITORY}" | jq -r '.[].formula_names|join(" ")')" >> "$GITHUB_OUTPUT"
+        echo "cask_list=$(brew tap-info --json "${GITHUB_REPOSITORY}" | jq -r '.[].cask_tokens|join(" ")')" >> "$GITHUB_OUTPUT"
 
     - name: Bump packages
       uses: Homebrew/actions/bump-packages@main
@@ -22,14 +31,8 @@ jobs:
         # Custom GitHub access token with only the 'public_repo' scope enabled
         token: ${{secrets.AUTOBUMP_TOKEN}}
         # Bump only these formulae if outdated
-        formulae: >
-          curl
-          forgejo
-          rclone
-          taproom
+        formulae: ${{ steps.autobump.outputs.formulae_list }}
         # Bump only these casks if outdated
-        casks: >
-          parsec-startup
-          rsyncui
+        casks: ${{ steps.autobump.outputs.cask_list }}
         # Do not use a fork for opening PR's
         fork: true # false

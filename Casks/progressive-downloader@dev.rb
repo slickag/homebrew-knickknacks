@@ -1,5 +1,5 @@
 cask "progressive-downloader@dev" do
-  version "8.2.12"
+  version "8.3.1"
   sha256 :no_check
 
   url "https://www.macpsd.net/update/development/PSD.dmg"

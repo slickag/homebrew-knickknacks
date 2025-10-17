@@ -8,6 +8,14 @@ jobs:
   autobump:
     runs-on: macos-26
     steps:
+    - name: Set up Homebrew
+      uses: Homebrew/actions/setup-homebrew@main
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up git
+      uses: Homebrew/actions/git-user-config@main
+
     - name: Bump packages
       uses: Homebrew/actions/bump-packages@main
       with:

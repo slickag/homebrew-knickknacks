@@ -1,6 +1,6 @@
 cask "munkiadmin-beta" do
-  version "1.10.0b6"
-  sha256 "63b709338473551119424b55058e989b198ae72efb42d7fcd001cdb7c4152411"
+  version "1.10.1"
+  sha256 "29a4c5ba0ba9cddde9045a78098d7426d1972ff516707af77cd43c3b82b2222f"
 
   url "https://github.com/hjuutilainen/munkiadmin/releases/download/v#{version}/MunkiAdmin-#{version}.dmg",
       verified: "github.com/hjuutilainen/munkiadmin/"

@@ -1,28 +1,29 @@
-name: Homebrew bump formula
+name: Homebrew bump packages
 on:
+  workflow_dispatch:
   schedule:
-  - cron: '30 1 * * *'
+  - cron: "30 2 * * *"
 
 jobs:
   autobump:
-    runs-on: ubuntu-latest
+    runs-on: macos-26
     steps:
-    - name: Update Homebrew formula
-      uses: dawidd6/action-homebrew-bump-formula@master
+    - name: Bump packages
+      uses: Homebrew/actions/bump-packages@main
       with:
-        # Required, custom personal GitHub access token with only the 'public_repo' scope enabled
+        # Custom GitHub access token with only the 'public_repo' scope enabled
         token: ${{secrets.AUTOBUMP_TOKEN}}
-        # Optional, will commit with this user name
-        user_name: slickag
-        # Optional, will commit with this user email
-        user_email: 45057319+slickag@users.noreply.github.com
-        # Optional, will create tap repo fork in organization
-        # org: ORG
-        # Bump all outdated formulae in this tap
-        tap: slickag/knickknacks
         # Bump only these formulae if outdated
-        # formula: FORMULA-1, FORMULA-2, FORMULA-3, ...
-        # Optional, if don't want to check for already open PRs
-        force: false # true
-        # Need to set this input if want to use `brew livecheck`
-        livecheck: true
+        # formulae: >
+        #   FORMULA-1
+        #   FORMULA-2
+        #   FORMULA-3
+        #   ...
+        # Bump only these casks if outdated
+        # casks: >
+        #   CASK-1
+        #   CASK-2
+        #   CASKS-3
+        #   ...
+        # Do not use a fork for opening PR's
+        fork: false

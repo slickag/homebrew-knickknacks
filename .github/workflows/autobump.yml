@@ -13,26 +13,14 @@ jobs:
       uses: Homebrew/actions/setup-homebrew@main
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        core: false
-        cask: false
 
     - name: Set up git
       uses: Homebrew/actions/git-user-config@main
 
-    - name: Get list of autobump items
-      id: autobump
-      run: |
-        echo "formulae_list=$(brew tap-info --json "${GITHUB_REPOSITORY}" | jq -r '.[].formula_names|join(" ")')" >> "$GITHUB_OUTPUT"
-        echo "cask_list=$(brew tap-info --json "${GITHUB_REPOSITORY}" | jq -r '.[].cask_tokens|join(" ")')" >> "$GITHUB_OUTPUT"
-
     - name: Bump packages
-      uses: Homebrew/actions/bump-packages@main
-      with:
-        # Custom GitHub access token with only the 'public_repo' scope enabled
-        token: ${{secrets.AUTOBUMP_TOKEN}}
-        # Bump only these formulae if outdated
-        formulae: ${{ steps.autobump.outputs.formulae_list }}
-        # Bump only these casks if outdated
-        casks: ${{ steps.autobump.outputs.cask_list }}
-        # Do not use a fork for opening PR's
-        fork: true # false
+      id: autobump
+      run: brew bump --open-pr --full-name --tap "${GITHUB_REPOSITORY}"
+      shell: bash
+      env:
+        HOMEBREW_DEVELOPER: "1"
+        HOMEBREW_GITHUB_API_TOKEN: ${{secrets.AUTOBUMP_TOKEN}}

@@ -22,16 +22,14 @@ jobs:
         # Custom GitHub access token with only the 'public_repo' scope enabled
         token: ${{secrets.AUTOBUMP_TOKEN}}
         # Bump only these formulae if outdated
-        # formulae: >
-        #   FORMULA-1
-        #   FORMULA-2
-        #   FORMULA-3
-        #   ...
+        formulae: >
+          curl
+          forgejo
+          rclone
+          taproom
         # Bump only these casks if outdated
-        # casks: >
-        #   CASK-1
-        #   CASK-2
-        #   CASKS-3
-        #   ...
+        casks: >
+          parsec-startup
+          rsyncui
         # Do not use a fork for opening PR's
         fork: true # false

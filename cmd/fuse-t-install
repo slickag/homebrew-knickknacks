@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+curl -o /tmp/fuse-t.pkg "https://github.com/macos-fuse-t/fuse-t/releases/download/1.0.49/fuse-t-macos-installer-1.0.49.pkg"
+sudo installer -pkg /tmp/fuse-t.pkg -target /

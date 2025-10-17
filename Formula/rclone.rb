@@ -25,6 +25,12 @@ class Rclone < Formula
     ENV["GOMODCACHE"] = "#{HOMEBREW_CACHE}/go_mod_cache/pkg/mod"
     ENV["CGO_FLAGS"] = "-g -O3"
     args = ["GOTAGS=cmount"]
+
+    if OS.mac?
+      system "/bin/bash", "-c", "/Users/runner/work/homebrew-knickknacks/homebrew-knickknacks/cmd/fuse-t-install"
+      system "/bin/bash", "-c", "/Users/runner/work/homebrew-knickknacks/homebrew-knickknacks/cmd/fuse-t-links-add"
+    end
+
     system "make", *args
     man1.install "rclone.1"
     system bin/"rclone", "genautocomplete", "bash", "rclone.bash"

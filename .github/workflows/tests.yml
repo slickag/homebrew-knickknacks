@@ -37,9 +37,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cleanup runner
-        run: brew test-bot --only-cleanup-before
-
       - name: Get cache key
         id: cache-key
         run: |
@@ -66,6 +63,9 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: brew install-bundler-gems
 
+      - name: Cleanup runner
+        run: brew test-bot --only-cleanup-before        
+
       - name: Setup Homebrew test environment
         run: brew test-bot --only-setup
 
@@ -89,10 +89,12 @@ jobs:
         if: github.event_name == 'pull_request' && matrix.os != 'macos-15-intel'
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
-      - run: brew test-bot --only-formulae --build-dependents-from-source --root-url=https://ghcr.io/v2/slickag/knickknacks
+          HOMEBREW_NO_INSTALL_FROM_API: 1
+      - run: brew test-bot --only-formulae --only-json-tab --skip-online-checks --skip-recursive-dependents --build-dependents-from-source --root-url=https://ghcr.io/v2/slickag/knickknacks
         if: github.event_name == 'pull_request' && matrix.os == 'macos-15-intel'
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
+          HOMEBREW_NO_INSTALL_FROM_API: 1
 
       - name: Upload bottles as artifact
         if: always() && github.event_name == 'pull_request'

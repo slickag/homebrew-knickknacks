@@ -86,7 +86,11 @@ jobs:
           echo "::add-mask::${base64_token}"
           echo "token=${base64_token}" >> "${GITHUB_OUTPUT}"
       - run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/slickag/knickknacks
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && matrix.os != 'macos-15-intel'
+        env:
+          HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
+      - run: brew test-bot --only-formulae --build-dependents-from-source --root-url=https://ghcr.io/v2/slickag/knickknacks
+        if: github.event_name == 'pull_request' && matrix.os == 'macos-15-intel'
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
 

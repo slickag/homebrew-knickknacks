@@ -6,11 +6,23 @@ on:
       - main
   pull_request:
 
+env:
+  HOMEBREW_DEVELOPER: 1
+
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+
+concurrency:
+  group: cache-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   test-bot:
     strategy:
       matrix:
-        os: [ ubuntu-22.04, macos-15-intel, macos-26 ]
+        os: [ ubuntu-latest, macos-26, macos-15, macos-15-intel, macos-14 ]
+      fail-fast: false
     runs-on: ${{ matrix.os }}
     permissions:
       actions: read
@@ -25,19 +37,40 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Cleanup runner
+        run: brew test-bot --only-cleanup-before
+
+      - name: Get cache key
+        id: cache-key
+        run: |
+          cache_key_prefix="${RUNNER_OS}"
+          if [ "${RUNNER_OS}" = macOS ]
+          then
+            macos_version="$(sw_vers -productVersion)"
+            cache_key_prefix="macos${macos_version%%.*}-$(uname -m)"
+          elif [ "${RUNNER_OS}" = Linux ]
+          then
+            cache_key_prefix="linux-$(uname -m)"
+          fi
+          echo "prefix=${cache_key_prefix}" >> "${GITHUB_OUTPUT}"
+
       - name: Cache Homebrew Bundler RubyGems
+        id: cache
         uses: actions/cache@v4
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
-          key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
-          restore-keys: ${{ matrix.os }}-rubygems-
+          key: ${{ steps.cache-key.outputs.prefix }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ steps.cache-key.outputs.prefix }}-rubygems-
 
-      - run: brew test-bot --only-cleanup-before
+      - name: Install Homebrew Bundler RubyGems
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: brew install-bundler-gems
 
-      - run: brew test-bot --only-setup
+      - name: Setup Homebrew test environment
+        run: brew test-bot --only-setup
 
       - name: Install FUSE-T
-        if: matrix.os == 'macos-26' || matrix.os == 'macos-15-intel'
+        if: matrix.os != 'ubuntu-latest'
         run: |
           brew install --cask fuse-t
           /bin/bash -c /Users/runner/work/homebrew-knickknacks/homebrew-knickknacks/cmd/fuse-t-links-add > /dev/null
@@ -53,7 +86,11 @@ jobs:
           echo "::add-mask::${base64_token}"
           echo "token=${base64_token}" >> "${GITHUB_OUTPUT}"
       - run: brew test-bot --only-formulae --root-url=https://ghcr.io/v2/slickag/knickknacks
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && matrix.os != 'macos-15-intel'
+        env:
+          HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
+      - run: brew test-bot --only-formulae --build-dependents-from-source --root-url=https://ghcr.io/v2/slickag/knickknacks
+        if: github.event_name == 'pull_request' && matrix.os == 'macos-15-intel'
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
 
@@ -61,5 +98,5 @@ jobs:
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
-          name: bottles_${{ matrix.os }}
+          name: bottles_${{ steps.cache-key.outputs.prefix }}
           path: '*.bottle.*'

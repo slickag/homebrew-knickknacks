@@ -16,6 +16,8 @@ jobs:
 
     - name: Set up git
       uses: Homebrew/actions/git-user-config@main
+      with:
+        username: slickag
 
     - name: Bump packages
       id: autobump

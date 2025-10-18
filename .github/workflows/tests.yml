@@ -47,7 +47,10 @@ jobs:
           if [ "${RUNNER_OS}" = macOS ]
           then
             macos_version="$(sw_vers -productVersion)"
-            cache_key_prefix="${macos_version%%.*}-$(uname -m)"
+            cache_key_prefix="macos${macos_version%%.*}-$(uname -m)"
+          elif [ "${RUNNER_OS}" = Linux ]
+          then
+            cache_key_prefix="linux-$(uname -m)"
           fi
           echo "prefix=${cache_key_prefix}" >> "${GITHUB_OUTPUT}"
 

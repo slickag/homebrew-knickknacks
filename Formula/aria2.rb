@@ -5,6 +5,14 @@ class Aria2 < Formula
   sha256 "60a420ad7085eb616cb6e2bdf0a7206d68ff3d37fb5a956dc44242eb2f79b66b"
   license "GPL-2.0-or-later"
 
+  bottle do
+    root_url "https://ghcr.io/v2/slickag/knickknacks"
+    sha256 cellar: :any,                 arm64_tahoe:   "c32a770568a4f6e88c62c815f45320fdf9dfda517f09b7c93a01c972c06138ec"
+    sha256 cellar: :any,                 arm64_sequoia: "4b90e662984b3d4302e834b8a85167fcb4721e0c55fcd252b5f56cd7aed3bb39"
+    sha256 cellar: :any,                 arm64_sonoma:  "45f01ce046e4459d63f605bc4cc99947b2f04676f129614817d962e4e28821b4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "1962f0ac9e4574206fadc0ee887c37ba55e4ed659b0e06e0570f8bee2e5806d3"
+  end
+
   head do
     url "https://github.com/aria2/aria2.git", branch: "master"
 

@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+env:
+  HOMEBREW_DEVELOPER: 1
+
 defaults:
   run:
     shell: bash -xeuo pipefail {0}
@@ -34,6 +37,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Cleanup runner
+        run: brew test-bot --only-cleanup-before
+
       - name: Get cache key
         id: cache-key
         run: |
@@ -46,14 +52,16 @@ jobs:
           echo "prefix=${cache_key_prefix}" >> "${GITHUB_OUTPUT}"
 
       - name: Cache Homebrew Bundler RubyGems
+        id: cache
         uses: actions/cache@v4
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ steps.cache-key.outputs.prefix }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ steps.cache-key.outputs.prefix }}-rubygems-
 
-      - name: Cleanup runner
-        run: brew test-bot --only-cleanup-before
+      - name: Install Homebrew Bundler RubyGems
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: brew install-bundler-gems
 
       - name: Setup Homebrew test environment
         run: brew test-bot --only-setup

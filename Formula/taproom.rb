@@ -6,6 +6,16 @@ class Taproom < Formula
   license "MIT"
   head "https://github.com/hzqtc/taproom.git", branch: "main"
 
+  bottle do
+    root_url "https://ghcr.io/v2/slickag/knickknacks"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "85bed6d61aa63d44ed6aae42737c3886d36db41ca066a1206e8e126fae0c0dfa"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "9e16f519a8cc4be51010860676f51c0efd1fffc1fffe8eed24446d4b85863943"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "16b5602abf4c06a3300815f6d6815661d8a17850b2535c4e6fd20c5986f028b0"
+    sha256 cellar: :any_skip_relocation, sequoia:       "885a3b48ec8949f09b6f2fbc619af5c1edf39a9482ebec455e5ae51c16c536ff"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "7df9208d5c330f3fe093f945398dfe304a983db1a9c7c686d35a349f24afebdc"
+  end
+
   depends_on "go" => :build
 
   def install

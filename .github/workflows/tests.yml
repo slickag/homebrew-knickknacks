@@ -100,7 +100,7 @@ jobs:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
       # - run: brew test-bot --only-formulae --only-json-tab --skip-online-checks --skip-recursive-dependents --build-dependents-from-source --root-url=https://ghcr.io/v2/slickag/knickknacks
       - run: |
-          cp /Users/runner/work/homebrew-knickknacks/homebrew-knickknacks/cmd/tb_formulae.rb "$(brew --prefix)/Library/Homebrew/test_bot/formulae.rb"
+          cp /Users/runner/work/homebrew-knickknacks/homebrew-knickknacks/cmd/tb_formulae "$(brew --prefix)/Homebrew/Library/Homebrew/test_bot/formulae.rb"
           brew test-bot --only-formulae --root-url=https://ghcr.io/v2/slickag/knickknacks
         if: github.event_name == 'pull_request' && matrix.os == 'macos-15-intel'
         name: Build bottle (Intel)

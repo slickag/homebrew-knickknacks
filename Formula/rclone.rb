@@ -8,12 +8,11 @@ class Rclone < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/slickag/knickknacks"
-    rebuild 2
-    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "8f739eb25fd8b4dce8022c5384b99eb025bdc4f51bab8e725007d976dc7ed00b"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "60d27adb0c722d80407a9af28cd9293c8c4616bd7cdbee15964bd3852b7dc826"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "d11195ab20f5c42ee60da8387eabadfb00b3a86560bc1c07b295f2e8bb0fc431"
-    sha256 cellar: :any_skip_relocation, sequoia:       "241cb72829382fa7587481623ab293ee329547bebf1d57ac79129346643e675e"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "65ba1a6ba897643e29ec96d1153a8d3152baf94dd20938a392a353c5d222c700"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "1c6b8622cfcb191256ab0b68471d339700b7286ab9778850d185de5cb32f01d8"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "20b0dbfb3d0f542853dcdd87e31792c11a0d8c48b17b829d92bf7246ce419331"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "797898e8ab512848c07308b19d6de4ca0589a37fffb338104e4dfd6103791f4c"
+    sha256 cellar: :any_skip_relocation, sequoia:       "3e3070de54131b6fc2aa7c3f72a8bc44cd94ef11afa882dbd5894b94cabce632"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "0ef1e709efb7ed8a7c7adc22df97313f6f13c898eeaf9ebb903388f20083e045"
   end
 
   depends_on "go" => :build

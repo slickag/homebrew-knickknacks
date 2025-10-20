@@ -94,14 +94,21 @@ jobs:
         if: github.event_name == 'pull_request' && matrix.os != 'macos-15-intel'
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
-          HOMEBREW_NO_INSTALL_FROM_API: 1
-      - run: brew test-bot --only-formulae --only-json-tab --skip-online-checks --skip-recursive-dependents --build-dependents-from-source --root-url=https://ghcr.io/v2/slickag/knickknacks
+      # - run: brew test-bot --only-formulae --only-json-tab --skip-online-checks --skip-recursive-dependents --build-dependents-from-source --root-url=https://ghcr.io/v2/slickag/knickknacks
+      - run: |
+          if [[ -z "$TESTING_FORMULAE" ]]
+          then
+            exit 0
+          fi
+          
+          brew install --formula --build-bottle "${TESTING_FORMULAE}"
+          brew bottle --verbose --json --root-url=https://ghcr.io/v2/slickag/knickknacks --only-json-tab "${TESTING_FORMULAE}"
         if: github.event_name == 'pull_request' && matrix.os == 'macos-15-intel'
         name: Build bottle (Intel)
         id: build-bottle-intel
         env:
           HOMEBREW_DOCKER_REGISTRY_TOKEN: ${{ steps.base64-encode.outputs.token }}
-          HOMEBREW_NO_INSTALL_FROM_API: 1
+          TESTING_FORMULAE: ${{ steps.formulae-detect.outputs.testing_formulae }}
 
       - name: Upload bottles as artifact
         if: always() && github.event_name == 'pull_request'

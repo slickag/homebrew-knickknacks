@@ -44,7 +44,7 @@ class Aria2 < Formula
     if build.head?
       ENV.append_to_cflags "-march=native -O3 -pipe -flto=auto"
 
-      system "autoreconf", "--force", "--install", "--verbose" if build.head?
+      system "autoreconf", "--force", "--install", "--verbose"
     end
 
     args = %w[

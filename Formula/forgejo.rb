@@ -6,6 +6,16 @@ class Forgejo < Formula
   license "GPL-3.0-or-later"
   head "https://codeberg.org/forgejo/forgejo.git", branch: "forgejo"
 
+  bottle do
+    root_url "https://ghcr.io/v2/slickag/knickknacks"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "a540308446aab9170fc3ecfc7befc993d32b3ae9036a35ca048d095b9cb4e68a"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "f99a4390b7f4ddcdcbc748e62bc0c7113e4476260059f0ef94b8bdf1ce1ac6e6"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "07dbefc9b50c2423980af67a86aa2cd33879f101d5b83b391b6951b55b39d6d6"
+    sha256 cellar: :any_skip_relocation, sequoia:       "35a56a424aea1da83d17b35eda711b74492e1e4484fd702058a3aff4edc6b3c4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "ba65efd2c085cb4540f9b645fd2e7215e8452194963df22cdad357b23a7476e2"
+  end
+
   depends_on "go" => :build
   depends_on "node" => :build
 

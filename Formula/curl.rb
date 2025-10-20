@@ -24,6 +24,15 @@ class Curl < Formula
     regex(/href=.*?curl[._-]v?(.*?)\.t/i)
   end
 
+  bottle do
+    root_url "https://ghcr.io/v2/slickag/knickknacks"
+    rebuild 3
+    sha256 cellar: :any, arm64_tahoe:   "ff6e3ccc888df345797b81524b9d842e265dac3ae6f40c57766b60f33bb412d4"
+    sha256 cellar: :any, arm64_sequoia: "a54babd30e2ca5c1ddd5181280c0b0d9a5a84f90677fdc73972b255e5ab24d85"
+    sha256 cellar: :any, arm64_sonoma:  "504be37a86a1f86f56365f540df3413ad0756baae0270b2edddf2cf9e57e59c2"
+    sha256 cellar: :any, sequoia:       "17f11bcb67b7694927b646cc6eaadc7340b6649686df737f83e6cf6ca7fc1328"
+  end
+
   head do
     url "https://github.com/curl/curl.git", branch: "master"
 

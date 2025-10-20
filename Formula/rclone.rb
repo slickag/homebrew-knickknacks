@@ -6,6 +6,16 @@ class Rclone < Formula
   license "MIT"
   head "https://github.com/rclone/rclone.git", branch: "master"
 
+  bottle do
+    root_url "https://ghcr.io/v2/slickag/knickknacks"
+    rebuild 2
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "8f739eb25fd8b4dce8022c5384b99eb025bdc4f51bab8e725007d976dc7ed00b"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "60d27adb0c722d80407a9af28cd9293c8c4616bd7cdbee15964bd3852b7dc826"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "d11195ab20f5c42ee60da8387eabadfb00b3a86560bc1c07b295f2e8bb0fc431"
+    sha256 cellar: :any_skip_relocation, sequoia:       "241cb72829382fa7587481623ab293ee329547bebf1d57ac79129346643e675e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "65ba1a6ba897643e29ec96d1153a8d3152baf94dd20938a392a353c5d222c700"
+  end
+
   depends_on "go" => :build
 
   on_linux do

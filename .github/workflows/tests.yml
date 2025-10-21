@@ -111,7 +111,7 @@ jobs:
           then
             export HOMEBREW_NO_INSTALL_FROM_API=1
             cp /Users/runner/work/homebrew-knickknacks/homebrew-knickknacks/.github/workflows/files/tb_formulae "$(brew --prefix)/Homebrew/Library/Homebrew/test_bot/formulae.rb"
-            brew test-bot --verbose --only-formulae --root-url=https://ghcr.io/v2/slickag/knickknacks
+            brew test-bot --only-formulae --root-url=https://ghcr.io/v2/slickag/knickknacks
           else
             brew test-bot --only-formulae --root-url=https://ghcr.io/v2/slickag/knickknacks
           fi

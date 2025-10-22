@@ -23,7 +23,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@main
+
+      - run: brew test-bot --only-tap-syntax  
   test-bot:
+    needs: check-syntax
     strategy:
       matrix:
         os:
@@ -93,7 +102,7 @@ jobs:
           brew install --cask fuse-t
           /bin/bash -c /Users/runner/work/homebrew-knickknacks/homebrew-knickknacks/cmd/fuse-t-links-add > /dev/null
 
-      - run: brew test-bot --only-tap-syntax          
+      # - run: brew test-bot --only-tap-syntax          
       - name: Base64-encode GITHUB_TOKEN for HOMEBREW_DOCKER_REGISTRY_TOKEN
         id: base64-encode
         if: github.event_name == 'pull_request'
@@ -126,3 +135,16 @@ jobs:
         with:
           name: bottles_${{ steps.cache-key.outputs.prefix }}
           path: '*.bottle.*'
+  labeler:
+    needs: test-bot
+    if: ${{ startsWith(github.head_ref, 'bump') && github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+    - id: label-the-PR
+      uses: actions/labeler@v6
+      with:
+        dot: false

@@ -8,12 +8,12 @@ class Forgejo < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/slickag/knickknacks"
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "a540308446aab9170fc3ecfc7befc993d32b3ae9036a35ca048d095b9cb4e68a"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "f99a4390b7f4ddcdcbc748e62bc0c7113e4476260059f0ef94b8bdf1ce1ac6e6"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "07dbefc9b50c2423980af67a86aa2cd33879f101d5b83b391b6951b55b39d6d6"
-    sha256 cellar: :any_skip_relocation, sequoia:       "35a56a424aea1da83d17b35eda711b74492e1e4484fd702058a3aff4edc6b3c4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "ba65efd2c085cb4540f9b645fd2e7215e8452194963df22cdad357b23a7476e2"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "7ff9e7095e0dc9cafd76f5713631f915917841d4c1d198eb0208555fa8a6317d"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "8675893e8b5e9ee0941e9bb80deef32a118cdbd982291dffe0af522d664b30fa"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "e6435c8d7a27b26302c1466637e3b81426b810b418b8551c9bcb361c705814dc"
+    sha256 cellar: :any_skip_relocation, sequoia:       "297a398b0d9c97045679f8a929617776558c75a58551c27285dbfbe69d6cc035"
+    sha256 cellar: :any_skip_relocation, arm64_linux:   "62ddb14571827a751630694aaa9a6c75ddcb60ae15967440e339e5017dad53c4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "3ecfc3400612a8864bc30d476fb2d4c38b7f02542973ddb17b4bb7de7d2d51f0"
   end
 
   depends_on "go" => :build

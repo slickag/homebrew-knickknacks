@@ -1,5 +1,5 @@
 cask "progressive-downloader@dev" do
-  version "8.3.1"
+  version "8.4"
   sha256 :no_check
 
   url "https://www.macpsd.net/update/development/PSD.dmg"
@@ -14,7 +14,6 @@ cask "progressive-downloader@dev" do
 
   auto_updates true
   conflicts_with cask: "progressive-downloader"
-  depends_on macos: ">= :big_sur"
 
   app "Progressive Downloader.app"
 
